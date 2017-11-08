@@ -179,7 +179,7 @@ var i18n_en = {
         templateAliasName: 'Alias Name',
         templatePort: 'Port',
         templateName: 'Name',
-        templateDate: 'Create At',
+        templateDate: 'Created At',
         templateUpdate: 'Last Update',
         templateHandle: 'Operation',
         Edit: 'Edit',
@@ -282,7 +282,7 @@ var i18n_en = {
         bujianlist: 'Component List',
         taskProgress: 'Progress',
         taskResult: 'Status',
-        createTime: 'Create At',
+        createTime: 'Created At',
         taskStatusOptin: {
             value: '',
             label: 'All'
@@ -322,13 +322,15 @@ var i18n_en = {
         details: 'Details',
         getDNInfoErrorTips: 'Failed to obtain device upgrade details',
         getDNInfoTips: 'Getting the upgrade details for the device',
-        serverName: 'Name'
+        serverName: 'Name',
+        deivceFirmwareTips: 'If the device firmware or driver does not have a matching upgrade package, the firmware information is not displayed on the task upgrade list.',
+        selectFirmwareTips: 'Please select firmware with the same upgrade mode.'
     },
     task: {
         taskName: "Name",
         taskProgress: "Progress",
         taskStatus: "Status",
-        createTime: "Create At",
+        createTime: "Created At",
         taskIdenty: 'Task Identy',
         dn: "DN",
         name: 'Name',
@@ -382,7 +384,7 @@ var i18n_en = {
         eSightnull: 'Mandatory field',
         addSuccessMsg: 'Add successfully',
         esightHost: 'eSight Host',
-        time: 'Create At',
+        time: 'Created At',
         created: 'Uploading',
         finished: 'Done',
         syncFailed: 'Sync failed',

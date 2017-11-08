@@ -76,24 +76,37 @@
                 <h4>{{i18ns.firmware.selectFirmware}}</h4>
             </el-row>
             <el-form label-width="80px" label-position="left">
-                <el-row>
-                    <el-form-item label="">
-                        <el-checkbox :label="firmwareTypeList[0].label" :key="firmwareTypeList[0].value" v-model="checkAll" @change="firmwareTypeChangeAll">{{firmwareTypeList[0].label}}</el-checkbox>
-                    </el-form-item>
-                </el-row>
                 <el-checkbox-group v-model="firmwareTypes" @change="firmwareTypeChange">
+                    <el-row class="el-alert--info">
+                        <el-alert v-bind:title="i18ns.firmware.deivceFirmwareTips" show-icon :closable="false"></el-alert>
+                        <el-alert v-bind:title="i18ns.firmware.selectFirmwareTips" show-icon :closable="false"></el-alert>
+                    </el-row>
                     <el-row class="row-checkbox">
                         <el-form-item v-bind:label="i18ns.firmware.driver_firm">
-                            <el-checkbox :label="firmwareTypeList[1].value" :key="firmwareTypeList[1].value" name="firmwareTypes">{{firmwareTypeList[1].label}}</el-checkbox>
-                            <el-checkbox :label="firmwareTypeList[2].value" :key="firmwareTypeList[2].value" name="firmwareTypes">{{firmwareTypeList[2].label}}</el-checkbox>
+                            <el-checkbox :label="firmwareTypeList[0].value" :key="firmwareTypeList[0].value" name="firmwareTypes" :disabled="driverBandBool">{{firmwareTypeList[0].label}}</el-checkbox>
+                            <el-checkbox :label="firmwareTypeList[1].value" :key="firmwareTypeList[1].value" name="firmwareTypes" :disabled="driverBandBool">{{firmwareTypeList[1].label}}</el-checkbox>
+
                         </el-form-item>
                     </el-row>
                     <el-row class="row-checkbox">
                         <el-form-item v-bind:label="i18ns.firmware.outBand_firm">
-                            <el-checkbox :label="firmwareTypeList[3].label" :key="firmwareTypeList[3].value" name="firmwareTypes">{{firmwareTypeList[3].label}}</el-checkbox>
-                            <el-checkbox :label="firmwareTypeList[4].label" :key="firmwareTypeList[4].value" name="firmwareTypes">{{firmwareTypeList[4].label}}</el-checkbox>
-                            <el-checkbox :label="firmwareTypeList[5].label" :key="firmwareTypeList[5].value" name="firmwareTypes">{{firmwareTypeList[5].label}}</el-checkbox>
-                            <el-checkbox :label="firmwareTypeList[6].label" :key="firmwareTypeList[6].value" name="firmwareTypes">{{firmwareTypeList[6].label}}</el-checkbox>
+                            <el-checkbox :label="firmwareTypeList[2].value" :key="firmwareTypeList[2].value" name="firmwareTypes" :disabled="outBandBool">{{firmwareTypeList[2].label}}</el-checkbox>
+                            <el-checkbox :label="firmwareTypeList[3].label" :key="firmwareTypeList[3].value" name="firmwareTypes" :disabled="outBandBool">{{firmwareTypeList[3].label}}</el-checkbox>
+                            <el-checkbox :label="firmwareTypeList[4].label" :key="firmwareTypeList[4].value" name="firmwareTypes" :disabled="outBandBool">{{firmwareTypeList[4].label}}</el-checkbox>
+                            <el-checkbox :label="firmwareTypeList[5].label" :key="firmwareTypeList[5].value" name="firmwareTypes" :disabled="outBandBool">{{firmwareTypeList[5].label}}</el-checkbox>
+                            <el-checkbox :label="firmwareTypeList[6].label" :key="firmwareTypeList[6].value" name="firmwareTypes" :disabled="outBandBool">{{firmwareTypeList[6].label}}</el-checkbox>
+
+                        </el-form-item>
+                    </el-row>
+                    <el-row class="row-checkbox">
+                        <el-form-item v-bind:label="i18ns.firmware.inBand_firm">
+                            <el-checkbox :label="firmwareTypeList[7].value" :key="firmwareTypeList[7].value" name="firmwareTypes" :disabled="inBandBool">{{firmwareTypeList[7].label}}</el-checkbox>
+                            <el-checkbox :label="firmwareTypeList[8].value" :key="firmwareTypeList[8].value" name="firmwareTypes" :disabled="inBandBool">{{firmwareTypeList[8].label}}</el-checkbox>
+                            <el-checkbox :label="firmwareTypeList[9].label" :key="firmwareTypeList[9].value" :value="firmwareTypeList[9].value" name="firmwareTypes" :disabled="inBandBool">{{firmwareTypeList[9].label}}</el-checkbox>
+                            <el-checkbox :label="firmwareTypeList[10].label" :key="firmwareTypeList[10].value" name="firmwareTypes" :disabled="inBandBool">{{firmwareTypeList[10].label}}</el-checkbox>
+                            <el-checkbox :label="firmwareTypeList[11].label" :key="firmwareTypeList[11].value" name="firmwareTypes" :disabled="inBandBool">{{firmwareTypeList[11].label}}</el-checkbox>
+                            <el-checkbox :label="firmwareTypeList[12].label" :key="firmwareTypeList[12].value" name="firmwareTypes" :disabled="inBandBool">{{firmwareTypeList[12].label}}</el-checkbox>
+                            <el-checkbox :label="firmwareTypeList[13].value" :key="firmwareTypeList[13].value" name="firmwareTypes" :disabled="inBandBool">{{firmwareTypeList[13].label}}</el-checkbox>
                         </el-form-item>
                     </el-row>
                 </el-checkbox-group>
@@ -252,6 +265,9 @@
         var app = new Vue({
             el: '#app',
             data: {
+                driverBandBool: false,
+                inBandBool: false,
+                outBandBool: false,
                 currentPage: 1,
                 pageSize: 10,
                 pageSizes: [10, 20, 50, 100],
@@ -349,6 +365,9 @@
                 }, 0);
             },
             methods: {
+                checkboxChange: function(val) {
+
+                },
                 /**
                  * 设置一页显示的数据总条数
                  * 
@@ -476,7 +495,26 @@
                 firmwareTypeChange: function(value) {
                     var checkedCount = value.length - 1;
                     this.checkAll = checkedCount === this.firmwareTypeList.length - 1;
-
+                    if (value.length > 0) {
+                        _.forEach(value, function(x) {
+                            if (x == 'CNA_DRIVE' || x == 'RAID_DRIVE') {
+                                app.inBandBool = true;
+                                app.outBandBool = true;
+                            } else if (x == 'HMM' || x == 'iBMC' ||
+                                x == 'BIOS' || x == 'CPLD' ||
+                                x == 'LCD') {
+                                app.driverBandBool = true;
+                                app.inBandBool = true;
+                            } else {
+                                app.driverBandBool = true;
+                                app.outBandBool = true;
+                            }
+                        }, this);
+                    } else {
+                        this.driverBandBool = false;
+                        this.inBandBool = false;
+                        this.outBandBool = false;
+                    }
                 },
                 /**
                  * 获取刀片服务器列表

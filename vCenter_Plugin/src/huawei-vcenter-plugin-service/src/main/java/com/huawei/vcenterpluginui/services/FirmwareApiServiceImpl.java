@@ -152,8 +152,9 @@ public class FirmwareApiServiceImpl extends ESightOpenApiService implements Firm
 	@Override
 	public Map<String,Object> upgradeTaskList(String esightIp, String taskName, String taskStatus, int pageNo, int pageSize, String order, String orderDesc, HttpSession session) throws SQLException, IOException{
 		Map<String, Object> taskParam = new HashMap<String, Object>();
-		taskParam.put("incompleted", true);
+//		taskParam.put("incompleted", true);
 		taskParam.put("taskType", TaskType.TASK_TYPE_DEPLOYFIRMWARE.name());
+		taskParam.put("esightIp", esightIp);
 
 		List<Task> taskList = taskDao.getIncompletedTaskList(taskParam);
 
@@ -171,6 +172,9 @@ public class FirmwareApiServiceImpl extends ESightOpenApiService implements Firm
 			task.setTaskCode((String)dataMap.get("taskCode"));
 			task.setTaskResult((String)dataMap.get("taskResult"));
 			taskDao.saveTaskStatus(task);
+			} catch (RuntimeException e) {
+				LOGGER.error(e.getMessage());
+				throw e;
 			}catch (Exception e) {
 				LOGGER.error(e.getMessage());
 //				task.setSyncStatus(SyncStatus.STATUS_SYNC_FAILED);
@@ -190,8 +194,8 @@ public class FirmwareApiServiceImpl extends ESightOpenApiService implements Firm
 			taskParam.put("order", order);
 			taskParam.put("orderDesc", orderDesc);
 		}
-		taskParam.remove("incompleted");
-		taskParam.put("esightIp", esightIp);
+//		taskParam.remove("incompleted");
+		
 		List<Task> data = taskDao.getIncompletedTaskList(taskParam);
 		int count = taskDao.getCountTaskList(taskParam);
 		
